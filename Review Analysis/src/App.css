@@ -1,0 +1,11 @@
+.bg-img {
+  background-image: url('./assets/background.jpg'); /* adjust the path */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+.bg-overlay {
+  background-color: rgba(0, 0, 0, 0.6); /* semi-transparent black */
+  min-height: 100vh;
+}

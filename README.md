@@ -1,114 +1,156 @@
-# Flipkart Review Sentiment Analyzer (BERT-based)
+# Flipkart Review Sentiment Analyzer
 
-This project builds a robust sentiment classification system using product review data scraped from Flipkart. The main goal is to predict whether a review expresses a positive, negative, or neutral sentiment using a BERT deep learning model.
-
----
-
-## 🔍 Overview
-
-* Cleans and preprocesses Flipkart product review dataset
-* Performs EDA (exploratory data analysis) and visualizations
-* Uses BERT (via HuggingFace Transformers) to train a sentiment classifier
-* Evaluates model on test data
-* Supports custom prediction on user review text
+A complete machine learning and deep learning pipeline for Flipkart product review sentiment analysis. This project performs data cleaning, EDA, sentiment labeling using VADER and rating, fine-tunes a BERT model, and integrates a React + Flask web app for user interaction.
 
 ---
 
-## 📁 Dataset
+## ✨ Features
 
-The dataset contains:
-
-* ProductName
-* Price
-* Rate (Rating)
-* Summary (short review)
-* Review (detailed review)
-
-⬆️ Primary text used for training is the "Summary" column
-⬆️ Labels are inferred from VADER sentiment scores and mapped to 3 classes:
-
-* `0` → Negative
-* `1` → Neutral
-* `2` → Positive
+- Clean and preprocess raw Flipkart reviews
+- Generate sentiment labels from star ratings and text summaries
+- Train a BERT-based classifier using Hugging Face Transformers
+- Evaluate model with validation and test accuracy
+- Fully working frontend in React with Bootstrap
+- Flask backend API for sentiment prediction
+- GPU support for faster model training
 
 ---
 
-## 🔧 Preprocessing Steps
+## 🥛 Tech Stack
 
-* Cleaned price values (remove ₹, commas)
-* Removed null or corrupt rows
-* Cleaned special characters from text
-* Converted all text to lowercase
-* Generated sentiment labels from both ratings and VADER compound scores
-* Saved final dataset to CSV
+### Machine Learning & NLP
 
----
+- Python 3.10+
+- Pandas, Numpy, Regex
+- NLTK (VADER Sentiment Intensity)
+- Scikit-learn (for splitting and evaluation)
+- HuggingFace Transformers (BERT)
+- PyTorch
 
-## 📊 EDA & Visualization
+### Web App
 
-* Sentiment distribution plots using seaborn
-* Top product counts per sentiment category
-* Word clouds for positive, neutral, and negative reviews
-
----
-
-## 🚀 Model Training (BERT)
-
-* Used HuggingFace Transformers (BertTokenizer, BertForSequenceClassification)
-* Tokenized summaries to max length 128
-* Used PyTorch datasets and Trainer API
-* Split into train, validation, and test sets (stratified)
-* Trained for 5 epochs with Adam optimizer and softmax loss
+- React (with Vite)
+- Bootstrap 5
+- Axios (for HTTP requests)
+- Flask (Python Backend API)
+- CORS middleware for cross-origin support
 
 ---
 
-## 🔬 Evaluation
+## 📊 Project Pipeline
 
-* Evaluated on training, validation, and test sets
-* Used sklearn's `classification_report` to display precision, recall, f1-score
-* Tracked overfitting or underfitting through accuracy/loss comparison
+### 1. Data Preprocessing
 
----
+- Load Flipkart product dataset (CSV format)
+- Clean invalid price values (e.g., text or symbols)
+- Handle nulls in reviews, summaries, and ratings
+- Remove punctuation and lowercase the text
+- Generate `Sentiment_from_rate` (based on rating)
+- Generate `Sentiment_from_summary` (using VADER scores)
 
-## 🤔 Prediction
+### 2. Exploratory Data Analysis
 
-* Model and tokenizer are saved to disk
-* You can load the model and run predictions on new summaries using:
+- Class-wise sentiment count plots
+- Word clouds for positive, neutral, and negative summaries
+- Crosstab analysis: summary vs. rating sentiment agreement
 
-  ```python
-  from transformers import BertTokenizer, BertForSequenceClassification
-  import torch
+### 3. Model Building (BERT)
 
-  tokenizer = BertTokenizer.from_pretrained("path/to/saved/model")
-  model = BertForSequenceClassification.from_pretrained("path/to/saved/model")
+- Preprocess text using BERT tokenizer
+- Split into train/validation/test (70/15/15)
+- Create custom PyTorch Dataset
+- Train `BertForSequenceClassification` (num_labels=3)
+- Evaluate accuracy on train, validation, and test sets
 
-  text = "The product quality is awesome"
-  inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=128)
-  outputs = model(**inputs)
-  predicted_class = torch.argmax(outputs.logits).item()
-  ```
+### 4. Model Deployment
 
----
+- Save model files: `model.safetensors`, tokenizer, config
+- Setup Flask backend to:
 
-## 💡 Tech Stack
+  - Load model
+  - Accept review text via `/predict` endpoint
+  - Return predicted sentiment (positive/neutral/negative)
 
-* Python
-* Pandas, NumPy
-* Matplotlib, Seaborn, WordCloud
-* PyTorch, HuggingFace Transformers
-* Scikit-learn
+### 5. Frontend with React
 
----
-
-## 🚪 Future Work
-
-* Extend model to classify full reviews (not just summaries)
-* Add product category to improve prediction
-* Convert model to ONNX/TFLite for lightweight inference
+- Textarea input for user reviews
+- Submit review to Flask API using Axios
+- Display sentiment result in styled alert
+- Responsive and styled using Bootstrap 5
 
 ---
 
-## 📅 Author
+## ⚡ How to Run Locally
 
-Mohammed Anas A R
-B.Tech CSE, Mar Baselios College of Engineering & Technology, Trivandrum
+### 1. Train the Model
+
+```bash
+cd backend
+python train_model.py  # Replace with your training script
+```
+
+### 2. Run the Flask Backend
+
+```bash
+cd backend
+pip install -r requirements.txt
+python app.py
+```
+
+### 3. Run React Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Visit: `http://localhost:5173`
+
+---
+
+## 📊 Sample Results
+
+- Classification accuracy: \~85-90% on test set
+- Real-time sentiment analysis works smoothly with fast BERT inference
+
+---
+
+## 📄 Folder Structure
+
+```
+Flipkart_Review_Analyzer/
+├── backend/
+│   ├── app.py (Flask app)
+│   ├── model/ (saved model folder)
+│   └── train_model.py
+├── frontend/
+│   ├── src/
+│   │   ├── Components/
+│   │   └── App.jsx
+│   └── public/
+└── flipkart_product.csv
+```
+
+---
+
+## 🙌 Author
+
+**Mohammed Anas A R**
+B.Tech CSE @ Mar Baselios College of Engineering, Trivandrum
+Portfolio: \[Coming Soon]
+
+---
+
+## ✨ Credits
+
+- HuggingFace Transformers
+- Bootstrap 5
+- React + Vite
+- NLTK VADER
+
+---
+
+## 🛡️ License
+
+This project is for academic and learning purposes only.

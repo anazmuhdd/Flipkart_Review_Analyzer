@@ -1,1 +1,2 @@
-model_bert/model.safetensors
+backend/model/model.safetensors
+Review Analysis/node_modules
